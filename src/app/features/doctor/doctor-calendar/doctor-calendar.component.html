@@ -1,0 +1,67 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Doctor · Schedule</div>
+      <h1 class="page-title">Calendar</h1>
+      <p class="page-sub">Week of May 4 — May 10, 2026 · 22 appointments scheduled · 4 hours of availability remaining</p>
+    </div>
+    <div style="display: flex; gap: 8px; align-items: center;">
+      <div style="display: flex; border: 1px solid var(--line); border-radius: 999px; padding: 2px;">
+        @for (v of ['Day', 'Week', 'Month']; track v; let i = $index) {
+          <button
+            class="btn ghost"
+            style="padding: 5px 14px; font-size: 12px;"
+            [style.background]="i === 1 ? 'var(--ink)' : 'transparent'"
+            [style.color]="i === 1 ? 'var(--bg)' : 'var(--ink-2)'"
+          >{{ v }}</button>
+        }
+      </div>
+      <button class="iconbtn" aria-label="Previous week"><app-icon name="chevL" /></button>
+      <button class="iconbtn" aria-label="Next week"><app-icon name="chevR" /></button>
+      <button class="btn primary"><app-icon name="plus" /> New event</button>
+    </div>
+  </div>
+
+  <div class="cal-head" style="grid-template-columns: 60px repeat(7, 1fr);">
+    <div></div>
+    @for (d of days; track d; let i = $index) {
+      <div
+        [style.background]="i === 2 ? 'var(--ink)' : undefined"
+        [style.color]="i === 2 ? 'var(--bg)' : undefined"
+      >
+        <div style="font-size: 11px;">{{ d }}</div>
+        <div [style.font-family]="'Fraunces, serif'" style="font-size: 18px; margin-top: 2px; letter-spacing: -0.02em;"
+             [style.color]="i === 2 ? 'var(--bg)' : 'var(--ink)'">{{ dates[i].split(' ')[1] }}</div>
+      </div>
+    }
+  </div>
+  <div style="position: relative;">
+    <div class="cal-body">
+      @for (h of hours; track h) {
+        <div class="cal-time">{{ h }}</div>
+        @for (d of [0,1,2,3,4,5,6]; track d) {
+          <div class="cal-cell" [style.min-height.px]="64" [style.background]="d === 2 ? 'rgba(201,211,193,0.12)' : 'transparent'"></div>
+        }
+      }
+    </div>
+    @for (e of events; track $index) {
+      <div
+        [class]="'cal-event ' + e.status"
+        style="position: absolute; padding: 6px 8px;"
+        [style.top]="eventTop(e)"
+        [style.height]="eventHeight(e)"
+        [style.left]="eventLeft(e)"
+        [style.width]="eventWidth()"
+      >
+        <div class="who">{{ e.patient }}</div>
+        <div class="what">{{ e.title }}</div>
+      </div>
+    }
+  </div>
+
+  <div style="display: flex; gap: 16px; margin-top: 18px; font-size: 12px; color: var(--muted);">
+    <span style="display: inline-flex; gap: 6px; align-items: center;"><span style="width: 12px; height: 12px; border-radius: 3px; background: var(--sage-tint); border-left: 2px solid var(--sage-deep); display: inline-block;"></span> Confirmed</span>
+    <span style="display: inline-flex; gap: 6px; align-items: center;"><span style="width: 12px; height: 12px; border-radius: 3px; background: var(--amber-soft); border-left: 2px solid var(--amber); display: inline-block;"></span> Pending</span>
+    <span style="display: inline-flex; gap: 6px; align-items: center;"><span style="width: 12px; height: 12px; border-radius: 3px; background: var(--line-soft); border-left: 2px solid var(--ink-2); display: inline-block;"></span> Completed</span>
+  </div>
+</div>

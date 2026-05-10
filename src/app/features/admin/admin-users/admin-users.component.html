@@ -1,0 +1,56 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Admin · User management</div>
+      <h1 class="page-title">Users</h1>
+      <p class="page-sub">Manage all accounts on the platform — patients, doctors, and admins. Activate, deactivate, or change roles.</p>
+    </div>
+    <button class="btn primary"><app-icon name="plus" /> Invite admin</button>
+  </div>
+
+  <div class="row" style="margin-bottom: 18px; gap: 12px;">
+    <input class="input" placeholder="Search by name or email" style="flex: 1;"
+      [value]="search()" (input)="search.set($any($event.target).value)" aria-label="Search users" />
+    <div style="display: flex; gap: 4px;">
+      @for (r of roleFilters; track r) {
+        <button
+          class="btn"
+          [style.background]="role() === r ? 'var(--ink)' : 'var(--surface)'"
+          [style.color]="role() === r ? 'var(--bg)' : 'var(--ink)'"
+          [style.border-color]="role() === r ? 'var(--ink)' : 'var(--line)'"
+          (click)="role.set(r)"
+        >{{ r }}</button>
+      }
+    </div>
+  </div>
+
+  <div class="panel" style="padding: 8px 24px;">
+    <table class="admin-table">
+      <thead>
+        <tr><th>User</th><th>Role</th><th>Status</th><th>Joined</th><th>License</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (u of filtered(); track u.id) {
+          <tr>
+            <td>
+              <div class="row gap-sm">
+                <div class="doc-photo" style="width: 32px; height: 32px; font-size: 12px;">{{ initials(u.name) }}</div>
+                <div>
+                  <div style="font-weight: 500;">{{ u.name }}</div>
+                  <div style="color: var(--muted); font-size: 11px;">{{ u.email }}</div>
+                </div>
+              </div>
+            </td>
+            <td><span class="tag" style="font-size: 10px;">{{ u.role }}</span></td>
+            <td><app-status-tag [status]="statusKey(u.status)" /></td>
+            <td style="color: var(--muted); font-size: 12px;">{{ u.joined }}</td>
+            <td class="mono" style="font-size: 12px;">{{ u.license }}</td>
+            <td style="text-align: right;">
+              <button class="btn ghost" style="padding: 4px 10px; font-size: 12px;">···</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,129 @@
+<div class="modal-backdrop" (click)="close.emit()">
+  <div class="modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Log vital signs">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow">Log a reading</div>
+        <div style="font-family: 'Fraunces', serif; font-size: 28px; margin-top: 4px; letter-spacing: -0.02em;">New vital signs entry</div>
+        <div style="color: var(--muted); font-size: 13px; margin-top: 2px;">{{ dateTimeLabel }}</div>
+      </div>
+      <button class="iconbtn" (click)="close.emit()" aria-label="Close modal">
+        <app-icon name="x" />
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <!-- Systolic BP -->
+        <div style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="label" style="margin-bottom: 0;">Systolic BP</span>
+            <span style="font-size: 11px; color: var(--muted);">90–139 normal</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 8px;">
+            <input class="input" type="number" [value]="vitals().sys" (change)="updateField('sys', +$any($event.target).value)" style="font-family: 'Geist Mono', monospace; font-size: 20px; padding: 6px 10px; flex: 1;" aria-label="Systolic BP in mmHg" />
+            <span style="color: var(--muted); font-size: 13px;">mmHg</span>
+          </div>
+        </div>
+        <!-- Diastolic BP -->
+        <div style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="label" style="margin-bottom: 0;">Diastolic BP</span>
+            <span style="font-size: 11px; color: var(--muted);">60–89 normal</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 8px;">
+            <input class="input" type="number" [value]="vitals().dia" (change)="updateField('dia', +$any($event.target).value)" style="font-family: 'Geist Mono', monospace; font-size: 20px; padding: 6px 10px; flex: 1;" aria-label="Diastolic BP in mmHg" />
+            <span style="color: var(--muted); font-size: 13px;">mmHg</span>
+          </div>
+        </div>
+        <!-- Heart rate -->
+        <div style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="label" style="margin-bottom: 0;">Heart rate</span>
+            <span style="font-size: 11px; color: var(--muted);">60–100 normal</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 8px;">
+            <input class="input" type="number" [value]="vitals().hr" (change)="updateField('hr', +$any($event.target).value)" style="font-family: 'Geist Mono', monospace; font-size: 20px; padding: 6px 10px; flex: 1;" aria-label="Heart rate in bpm" />
+            <span style="color: var(--muted); font-size: 13px;">bpm</span>
+          </div>
+        </div>
+        <!-- Temperature -->
+        <div style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="label" style="margin-bottom: 0;">Temperature</span>
+            <span style="font-size: 11px; color: var(--muted);">36.1–37.2 normal</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 8px;">
+            <input class="input" type="number" step="0.1" [value]="vitals().temp" (change)="updateField('temp', +$any($event.target).value)" style="font-family: 'Geist Mono', monospace; font-size: 20px; padding: 6px 10px; flex: 1;" aria-label="Temperature in Celsius" />
+            <span style="color: var(--muted); font-size: 13px;">°C</span>
+          </div>
+        </div>
+        <!-- SpO2 -->
+        <div style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="label" style="margin-bottom: 0;">Oxygen sat.</span>
+            <span style="font-size: 11px; color: var(--muted);">95–100 normal</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 8px;">
+            <input class="input" type="number" [value]="vitals().spo2" (change)="updateField('spo2', +$any($event.target).value)" style="font-family: 'Geist Mono', monospace; font-size: 20px; padding: 6px 10px; flex: 1;" aria-label="Oxygen saturation percentage" />
+            <span style="color: var(--muted); font-size: 13px;">%</span>
+          </div>
+        </div>
+        <!-- Weight -->
+        <div style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="label" style="margin-bottom: 0;">Weight</span>
+            <span style="font-size: 11px; color: var(--muted);"></span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 8px;">
+            <input class="input" type="number" step="0.1" [value]="vitals().weight" (change)="updateField('weight', +$any($event.target).value)" style="font-family: 'Geist Mono', monospace; font-size: 20px; padding: 6px 10px; flex: 1;" aria-label="Weight in kg" />
+            <span style="color: var(--muted); font-size: 13px;">kg</span>
+          </div>
+        </div>
+        <!-- Height -->
+        <div style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="label" style="margin-bottom: 0;">Height</span>
+            <span style="font-size: 11px; color: var(--muted);"></span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 8px;">
+            <input class="input" type="number" [value]="vitals().height" (change)="updateField('height', +$any($event.target).value)" style="font-family: 'Geist Mono', monospace; font-size: 20px; padding: 6px 10px; flex: 1;" aria-label="Height in cm" />
+            <span style="color: var(--muted); font-size: 13px;">cm</span>
+          </div>
+        </div>
+        <!-- BMI (auto) -->
+        <div style="padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface);">
+          <span class="label">BMI (auto)</span>
+          <div style="font-family: 'Geist Mono', monospace; font-size: 24px; margin-top: 8px;">{{ bmi() }}</div>
+          <div style="font-size: 11px; color: var(--muted); margin-top: 4px;">kg/m²</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 14px;">
+        <label class="label" for="vital-notes">Notes (optional)</label>
+        <textarea id="vital-notes" class="input" placeholder="Anything relevant — time of last meal, activity, medication taken, how you feel..."></textarea>
+      </div>
+
+      <div
+        style="margin-top: 14px; border-radius: 10px; display: flex; gap: 12px; align-items: center; padding: 14px;"
+        [style.background]="alertBg()"
+        [style.border]="'1px solid ' + alertBorder()"
+        role="status"
+        aria-live="polite"
+      >
+        <app-icon [name]="alertIcon()" [size]="18" [color]="alertColor()" />
+        <div style="flex: 1;">
+          <div [style.font-weight]="500" [style.font-size.px]="13.5" [style.color]="alertColor()">
+            Reading evaluates as <strong>{{ level() }}</strong>
+          </div>
+          <div style="font-size: 12px; color: var(--ink-2); margin-top: 2px;">{{ alertText() }}</div>
+        </div>
+        <app-status-tag [status]="level()" />
+      </div>
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn ghost" (click)="close.emit()">Cancel</button>
+      <button class="btn primary" (click)="save()">Save reading</button>
+    </div>
+  </div>
+</div>

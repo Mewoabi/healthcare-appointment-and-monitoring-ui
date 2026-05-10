@@ -1,0 +1,100 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Patient · Health monitoring</div>
+      <h1 class="page-title">Vital <em>signs</em></h1>
+      <p class="page-sub">Track measurements over time. Readings outside clinical ranges are flagged automatically and shared with your treating doctor.</p>
+    </div>
+    <button class="btn primary" (click)="openVital()"><app-icon name="plus" /> Add reading</button>
+  </div>
+
+  <!-- Now panel -->
+  <div class="vitals-card panel" style="margin-bottom: 18px;">
+    <div class="row between">
+      <div>
+        <div class="label">Latest reading</div>
+        <div style="display: flex; gap: 14px; align-items: baseline; margin-top: 6px;">
+          <div class="mono" style="font-size: 32px;">{{ recent().systolicBP }}/{{ recent().diastolicBP }}</div>
+          <div style="color: var(--muted);">mmHg systolic / diastolic · {{ fmt.dateLong(recent().timestamp) }}, {{ fmt.hour24(recent().timestamp) }}</div>
+        </div>
+      </div>
+      <app-status-tag [status]="recent().alertLevel" />
+    </div>
+    <div class="vitals-grid">
+      <div class="vital"><div class="name">Systolic BP</div><div class="val">{{ recent().systolicBP }}<span class="unit">mmHg</span></div><div class="trend">Was 132</div></div>
+      <div class="vital"><div class="name">Diastolic BP</div><div class="val">{{ recent().diastolicBP }}<span class="unit">mmHg</span></div><div class="trend">Was 84</div></div>
+      <div class="vital"><div class="name">Heart rate</div><div class="val">{{ recent().heartRate }}<span class="unit">bpm</span></div><div class="trend">Resting</div></div>
+      <div class="vital"><div class="name">Temperature</div><div class="val">{{ recent().temperature.toFixed(1) }}<span class="unit">°C</span></div><div class="trend">Oral</div></div>
+      <div class="vital"><div class="name">Oxygen sat.</div><div class="val">{{ recent().oxygenSaturation }}<span class="unit">%</span></div><div class="trend">Pulse-ox</div></div>
+      <div class="vital"><div class="name">Weight</div><div class="val">{{ recent().weight.toFixed(1) }}<span class="unit">kg</span></div><div class="trend">Morning</div></div>
+      <div class="vital"><div class="name">BMI</div><div class="val">{{ recent().bmi }}<span class="unit">kg/m²</span></div><div class="trend">Healthy</div></div>
+      <div class="vital"><div class="name">Height</div><div class="val">{{ recent().height }}<span class="unit">cm</span></div><div class="trend">Standing</div></div>
+    </div>
+  </div>
+
+  <!-- Trend chart -->
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <div class="panel-title">{{ activeMetric().label }} <em style="color: var(--muted);">· trend</em></div>
+        <div style="font-size: 13px; color: var(--muted); margin-top: 2px;">Last 30 days · {{ series().length }} readings</div>
+      </div>
+      <div style="display: flex; gap: 6px;">
+        @for (r of [['7d', '7 days'], ['30d', '30 days']]; track r[0]) {
+          <button
+            class="btn ghost"
+            [style.background]="range() === r[0] ? 'var(--ink)' : 'transparent'"
+            [style.color]="range() === r[0] ? 'var(--bg)' : 'var(--ink-2)'"
+            (click)="range.set($any(r[0]))"
+          >{{ r[1] }}</button>
+        }
+        <button class="btn ghost"><app-icon name="download" /> CSV</button>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 18px;">
+      <div class="col" style="gap: 4px;">
+        @for (m of metrics; track m.key) {
+          <button
+            class="side-item"
+            [class.active]="metric() === m.key"
+            (click)="metric.set(m.key)"
+          >
+            <span [style.width.px]="8" [style.height.px]="8" style="border-radius: 50%;" [style.background]="m.color"></span>
+            {{ m.label }}
+          </button>
+        }
+      </div>
+      <div class="chart-wrap">
+        <app-trend-chart [data]="series()" [color]="activeMetric().color" />
+      </div>
+    </div>
+  </div>
+
+  <!-- History list -->
+  <div class="panel" style="margin-top: 18px;">
+    <div class="panel-head">
+      <div class="panel-title">History</div>
+      <span class="tag">{{ vitalStore.vitals().length }} records</span>
+    </div>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Date</th><th>BP</th><th>HR</th><th>Temp</th><th>SpO₂</th><th>Weight</th><th>BMI</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        @for (v of vitalStore.vitals().slice(0, 10); track v.timestamp.getTime()) {
+          <tr>
+            <td>{{ fmt.dateLong(v.timestamp) }}, <span class="mono" style="color: var(--muted);">{{ fmt.hour24(v.timestamp) }}</span></td>
+            <td class="mono">{{ v.systolicBP }}/{{ v.diastolicBP }}</td>
+            <td class="mono">{{ v.heartRate }}</td>
+            <td class="mono">{{ v.temperature.toFixed(1) }}</td>
+            <td class="mono">{{ v.oxygenSaturation }}</td>
+            <td class="mono">{{ v.weight.toFixed(1) }}</td>
+            <td class="mono">{{ v.bmi }}</td>
+            <td><app-status-tag [status]="v.alertLevel" /></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

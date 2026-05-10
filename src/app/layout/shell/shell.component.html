@@ -1,0 +1,120 @@
+<!-- Topbar -->
+<header class="topbar">
+  <div class="row" style="gap: 36px">
+    <div class="brand">
+      <span class="brand-mark">P</span>
+      <span class="brand-name">Polaris<em>·Health</em></span>
+      <span class="brand-tag">{{ roleTag() }}</span>
+    </div>
+  </div>
+  <div class="topright">
+    <div style="position: relative; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; display: flex; align-items: center; gap: 8px; background: var(--surface); min-width: 280px;">
+      <app-icon name="search" [size]="14" color="var(--muted)" />
+      <input
+        placeholder="Search…"
+        aria-label="Search"
+        style="border: none; background: transparent; outline: none; flex: 1; font-family: inherit; font-size: 13px; color: var(--ink);"
+      />
+      <span class="mono" style="font-size: 10px; color: var(--muted); padding: 1px 5px; border: 1px solid var(--line); border-radius: 4px;">⌘K</span>
+    </div>
+    <div style="position: relative;">
+      <button class="iconbtn" (click)="toggleNotif($event)" aria-label="Notifications" [attr.aria-expanded]="state.showNotif()">
+        <app-icon name="bell" [size]="15" />
+        @if (unreadCount() > 0) {
+          <span class="badge">{{ unreadCount() }}</span>
+        }
+      </button>
+      @if (state.showNotif()) {
+        <app-notif-panel (close)="closeNotif()" />
+      }
+    </div>
+    <button class="iconbtn" aria-label="Settings">
+      <app-icon name="settings" [size]="15" />
+    </button>
+    <div class="row gap-sm" style="padding-left: 6px; border-left: 1px solid var(--line);">
+      <div class="avatar">{{ identity().initials }}</div>
+      <div style="font-size: 13px; line-height: 1.2;">
+        <div style="font-weight: 500;">{{ identity().name }}</div>
+        <div style="color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em;">{{ state.role() }}</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Layout -->
+<div class="layout">
+  <aside class="sidebar">
+    <!-- Scrollable nav region -->
+    <div class="sidebar-nav">
+      @for (entry of nav(); track $index) {
+        @if (isSection(entry)) {
+          <div class="side-section">{{ entry.section }}</div>
+        } @else {
+          <a
+            class="side-item"
+            [routerLink]="navItemPath(entry.id)"
+            routerLinkActive="active"
+          >
+            <app-icon [name]="entry.icon" [size]="15" />
+            <span>{{ entry.label }}</span>
+            @if (entry.count !== undefined) {
+              <span class="count">{{ entry.count }}</span>
+            }
+          </a>
+        }
+      }
+    </div>
+
+    <!-- Pinned foot: always visible regardless of viewport height -->
+    <div class="sidebar-foot">
+      <div class="side-section" style="padding-top: 0;">Switch role</div>
+      @for (pair of roleLinks; track pair[0]) {
+        <button
+          class="side-item"
+          [class.active]="state.role() === pair[0]"
+          style="font-size: 12.5px;"
+          (click)="setRole(pair[0])"
+        >
+          <app-icon name="user" [size]="14" />
+          <span style="font-size: 12.5px;">{{ pair[1] }}</span>
+        </button>
+      }
+      <div style="border-top: 1px solid var(--line-soft); margin-top: 8px; padding-top: 8px;">
+        <button class="side-item" style="color: var(--clay);" (click)="signOut()">
+          <app-icon name="logout" [size]="15" />
+          Sign out
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <router-outlet />
+  </main>
+</div>
+
+<!-- Modals (position: fixed — out of flow, don't affect flex layout) -->
+@if (state.bookDoctor()) {
+  <app-booking-modal
+    [doctor]="state.bookDoctor()!"
+    (close)="state.bookDoctor.set(null)"
+    (confirm)="state.bookDoctor.set(null); state.showToast('Booking sent to ' + $event.doctor.name + '. You\'ll be notified when it\'s confirmed.')"
+  />
+}
+@if (state.vitalOpen()) {
+  <app-vital-entry-modal
+    (close)="state.vitalOpen.set(false)"
+    (confirm)="state.vitalOpen.set(false); state.showToast($event === 'NORMAL' ? 'Reading saved.' : 'Reading saved · ' + $event + ' alert dispatched to your doctor.')"
+  />
+}
+
+<!-- Toast (position: fixed) -->
+@if (state.toast()) {
+  <div class="toast" role="status" aria-live="polite">
+    <app-icon name="check" [size]="16" color="#c9d3c1" />
+    <div>{{ state.toast() }}</div>
+  </div>
+}
+
+<!-- Dev tweaks panel (position: fixed) -->
+<app-tweaks-panel />

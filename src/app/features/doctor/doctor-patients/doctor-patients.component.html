@@ -1,0 +1,48 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Doctor · Patient roster</div>
+      <h1 class="page-title">Patients</h1>
+      <p class="page-sub">142 patients under your care. 3 with flagged vitals in the past 7 days.</p>
+    </div>
+    <div class="row gap-sm">
+      <input class="input" placeholder="Search patients" style="width: 280px;"
+        [value]="search()" (input)="search.set($any($event.target).value)" aria-label="Search patients" />
+      <button class="btn"><app-icon name="download" /> Export</button>
+    </div>
+  </div>
+
+  <div class="panel" style="padding: 8px 24px;">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Patient</th><th>Age</th><th>Reason</th><th>Last visit</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        @for (p of filtered(); track p.id) {
+          <tr style="cursor: pointer;">
+            <td>
+              <div class="row gap-sm">
+                <div class="doc-photo" style="width: 32px; height: 32px; font-size: 12px;">{{ p.initials }}</div>
+                <div>
+                  <div style="font-weight: 500;">{{ p.name }}</div>
+                  <div style="color: var(--muted); font-size: 11px;">#{{ p.id }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="mono">{{ p.age }}</td>
+            <td>{{ p.reason }}</td>
+            <td class="mono" style="color: var(--muted);">{{ p.lastVisit }}</td>
+            <td>
+              @if (p.flag) {
+                <app-status-tag [status]="p.flag" />
+              } @else {
+                <span style="color: var(--muted); font-size: 12px;">—</span>
+              }
+            </td>
+            <td style="text-align: right;"><button class="btn ghost" style="padding: 4px 10px; font-size: 12px;">Open chart →</button></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

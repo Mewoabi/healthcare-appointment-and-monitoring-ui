@@ -1,0 +1,57 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Doctor · Settings</div>
+      <h1 class="page-title">Availability</h1>
+      <p class="page-sub">Define when patients can book with you. Changes do not affect appointments that are already confirmed.</p>
+    </div>
+    <button class="btn primary"><app-icon name="plus" /> Add slot</button>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title" style="margin-bottom: 14px;">Recurring weekly slots</div>
+      <table class="admin-table">
+        <thead><tr><th>Day</th><th>Hours</th><th>Slot</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          @for (s of slots(); track s.id) {
+            <tr>
+              <td><strong>{{ s.day }}</strong></td>
+              <td class="mono">{{ s.start }} – {{ s.end }}</td>
+              <td class="mono">{{ s.duration }} min</td>
+              <td><app-status-tag [status]="s.active ? 'ACTIVE' : 'INACTIVE'" /></td>
+              <td style="text-align: right;">
+                <button class="btn ghost" style="padding: 4px 10px; font-size: 12px;">Edit</button>
+                <button class="btn ghost" style="padding: 4px 10px; font-size: 12px;">Pause</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title" style="margin-bottom: 14px;">Blocked dates</div>
+      <p style="font-size: 13px; color: var(--muted);">One-off exceptions to your weekly schedule (holidays, conferences, leave).</p>
+      <div style="margin-top: 14px; padding: 14px; background: var(--line-soft); border-radius: 10px;">
+        <div class="row between">
+          <div>
+            <div style="font-weight: 500;">Cardiology Symposium</div>
+            <div style="color: var(--muted); font-size: 12px;">May 20 — May 22, 2026</div>
+          </div>
+          <button class="btn ghost" style="padding: 4px 10px; font-size: 12px;">Remove</button>
+        </div>
+      </div>
+      <div style="margin-top: 8px; padding: 14px; background: var(--line-soft); border-radius: 10px;">
+        <div class="row between">
+          <div>
+            <div style="font-weight: 500;">Public holiday</div>
+            <div style="color: var(--muted); font-size: 12px;">May 25, 2026</div>
+          </div>
+          <button class="btn ghost" style="padding: 4px 10px; font-size: 12px;">Remove</button>
+        </div>
+      </div>
+      <button class="btn ghost" style="width: 100%; margin-top: 14px; justify-content: center;">+ Block another date</button>
+    </div>
+  </div>
+</div>

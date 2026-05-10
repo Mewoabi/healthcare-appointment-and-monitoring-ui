@@ -1,0 +1,96 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Patient · Account</div>
+      <h1 class="page-title">Profile</h1>
+      <p class="page-sub">Your personal, medical, and emergency information. Visible to doctors with active appointments.</p>
+    </div>
+    <button class="btn">Edit details</button>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title" style="margin-bottom: 18px;">Personal</div>
+      <div style="display: flex; gap: 18px; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--line-soft);">
+        <div class="doc-photo" style="width: 72px; height: 72px; font-size: 28px;">MH</div>
+        <div>
+          <div style="font-family: 'Fraunces', serif; font-size: 28px; line-height: 1; letter-spacing: -0.02em;">{{ patient?.name }}</div>
+          <div style="color: var(--muted); margin-top: 4px; font-size: 13px;">{{ patient?.email }}</div>
+          <div style="margin-top: 8px; display: flex; gap: 10px;">
+            <span class="tag sage"><span class="dot"></span>Verified</span>
+            <span class="tag">Patient #101</span>
+          </div>
+        </div>
+      </div>
+      <div style="padding: 14px 0; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Date of birth</span>
+        <span style="font-size: 14px;">{{ patient?.dob }} · {{ patient?.age }} years</span>
+      </div>
+      <div style="padding: 14px 0; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Gender</span>
+        <span style="font-size: 14px;">{{ patient?.gender }}</span>
+      </div>
+      <div style="padding: 14px 0; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Blood group</span>
+        <span style="font-size: 14px;">{{ patient?.bloodGroup }}</span>
+      </div>
+      <div style="padding: 14px 0; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Emergency contact</span>
+        <span style="font-size: 14px; text-align: right;">{{ patient?.emergencyContact }}</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title" style="margin-bottom: 18px;">Medical</div>
+      <div style="padding: 14px 0; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Allergies</span>
+        <span style="font-size: 14px; color: var(--clay); font-weight: 500; text-align: right;">{{ patient?.allergies }}</span>
+      </div>
+      <div style="padding: 14px 0; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Chronic conditions</span>
+        <span style="font-size: 14px; text-align: right;">{{ patient?.chronicConditions }}</span>
+      </div>
+      <div style="padding: 14px 0; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Insurance</span>
+        <span style="font-size: 14px; text-align: right;">{{ patient?.insurance }}</span>
+      </div>
+      <div style="padding: 14px 0; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Primary care doctor</span>
+        <span style="font-size: 14px;">Dr. Lin Marchetti</span>
+      </div>
+      <div style="padding: 14px 0; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+        <span style="color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;">Treating cardiologist</span>
+        <span style="font-size: 14px;">Dr. Amara Okonkwo</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top: 18px;">
+    <div class="panel-title" style="margin-bottom: 14px;">Notification preferences</div>
+    <div class="grid-3" style="gap: 12px;">
+      @for (pref of prefs(); track pref.label; let i = $index) {
+        <div style="padding: 14px; border: 1px solid var(--line-soft); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
+          <div>
+            <div style="font-size: 13.5px; font-weight: 500;">{{ pref.label }}</div>
+            <div style="font-size: 12px; color: var(--muted); margin-top: 2px;">{{ pref.desc }}</div>
+          </div>
+          <button
+            [style.width.px]="36"
+            [style.height.px]="20"
+            style="border-radius: 999px; border: none; position: relative; cursor: pointer; flex: none; transition: background .15s;"
+            [style.background]="pref.on ? 'var(--sage-deep)' : 'var(--line)'"
+            (click)="togglePref(i)"
+            [attr.aria-checked]="pref.on"
+            role="switch"
+            [attr.aria-label]="pref.label"
+          >
+            <span
+              style="position: absolute; top: 2px; width: 16px; height: 16px; border-radius: 999px; background: #fff; transition: left .2s ease;"
+              [style.left]="pref.on ? '18px' : '2px'"
+            ></span>
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

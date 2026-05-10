@@ -1,0 +1,148 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Wednesday · {{ fmt.date(today) }}, 2026</div>
+      <h1 class="page-title">Good morning,<br/><em>Maren.</em></h1>
+      <p class="page-sub">Your blood pressure trend has settled into the warning band. One reading was elevated last week — Dr. Okonkwo will review at today's visit.</p>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn" (click)="goto('vitals')"><app-icon name="activity" /> Log vitals</button>
+      <button class="btn primary" (click)="goto('find-doctor')"><app-icon name="plus" /> Book appointment</button>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stat-row">
+    <div class="stat featured">
+      <div class="label">Next appointment</div>
+      <div class="value" style="font-size: 32px;">2:30<span style="font-size: 16px; opacity: .6;"> pm</span></div>
+      <div style="margin-top: 12px; font-size: 13px; opacity: .85;">Today · Dr. Amara Okonkwo</div>
+      <div style="margin-top: 4px; font-size: 12px; opacity: .6;">Cardiology · BP review</div>
+    </div>
+    <div class="stat">
+      <div class="label">Blood pressure</div>
+      <div class="value mono" style="font-size: 30px;">128<span style="font-size: 18px; color: var(--muted);">/82</span></div>
+      <div class="delta">↘ 4 vs last reading</div>
+    </div>
+    <div class="stat">
+      <div class="label">Resting heart rate</div>
+      <div class="value mono" style="font-size: 30px;">74<span style="font-size: 14px; color: var(--muted); margin-left: 4px;">bpm</span></div>
+      <div class="delta">Within range</div>
+    </div>
+    <div class="stat">
+      <div class="label">Weight</div>
+      <div class="value mono" style="font-size: 30px;">64.2<span style="font-size: 14px; color: var(--muted); margin-left: 4px;">kg</span></div>
+      <div class="delta down">↗ 0.4 kg this week</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Vitals snapshot -->
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Vitals, <em>fortnight</em></div>
+          <div style="color: var(--muted); font-size: 13px; margin-top: 2px;">Last 14 days · self-reported &amp; clinic-recorded</div>
+        </div>
+        <button class="btn ghost" (click)="goto('vitals')">Open chart →</button>
+      </div>
+      <div class="grid-3" style="gap: 14px;">
+        <div style="padding: 14px; border: 1px solid var(--line-soft); border-radius: 10px;">
+          <div class="label" style="margin-bottom: 4px;">Systolic BP</div>
+          <div class="row between">
+            <div class="mono" style="font-size: 22px;">128 <span style="font-size: 11px; color: var(--muted);">mmHg</span></div>
+            <span class="trend-pill down">−4</span>
+          </div>
+          <div style="margin-top: 10px;"><app-sparkline [data]="sysSeries()" color="#c2614a" [fill]="true" [width]="220" /></div>
+        </div>
+        <div style="padding: 14px; border: 1px solid var(--line-soft); border-radius: 10px;">
+          <div class="label" style="margin-bottom: 4px;">Heart rate</div>
+          <div class="row between">
+            <div class="mono" style="font-size: 22px;">74 <span style="font-size: 11px; color: var(--muted);">bpm</span></div>
+            <span class="trend-pill">±0</span>
+          </div>
+          <div style="margin-top: 10px;"><app-sparkline [data]="hrSeries()" color="#3d4f3d" [fill]="true" [width]="220" /></div>
+        </div>
+        <div style="padding: 14px; border: 1px solid var(--line-soft); border-radius: 10px;">
+          <div class="label" style="margin-bottom: 4px;">Weight</div>
+          <div class="row between">
+            <div class="mono" style="font-size: 22px;">64.2 <span style="font-size: 11px; color: var(--muted);">kg</span></div>
+            <span class="trend-pill up">+0.4</span>
+          </div>
+          <div style="margin-top: 10px;"><app-sparkline [data]="wSeries()" color="#5a6f5a" [fill]="true" [width]="220" /></div>
+        </div>
+      </div>
+      <div style="margin-top: 22px; padding: 16px; background: #fdf5e3; border: 1px solid #ecdab2; border-radius: 10px; display: flex; gap: 14px;">
+        <div style="width: 32px; height: 32px; border-radius: 8px; background: #c08a2c; color: #fff; display: inline-flex; align-items: center; justify-content: center; flex: none;">
+          <app-icon name="flag" [size]="14" />
+        </div>
+        <div>
+          <div style="font-weight: 500; font-size: 14px;">One reading flagged in the past 30 days</div>
+          <div style="color: #6e4c10; font-size: 13px; margin-top: 4px;">April 30, 08:12 — 162/102 mmHg. Logged automatically; alert sent to Dr. Okonkwo.</div>
+        </div>
+        <button class="btn" style="margin-left: auto; flex: none;" (click)="goto('vitals')">Review</button>
+      </div>
+    </div>
+
+    <!-- Upcoming -->
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Upcoming</div>
+        <span class="tag">{{ upcoming().length }} scheduled</span>
+      </div>
+      <div class="appt-list">
+        @for (a of upcoming().slice(0, 3); track a.id) {
+          @let doc = getDoctor(a.doctorId);
+          <div class="appt" style="grid-template-columns: 76px 1fr;">
+            <div class="appt-time">
+              <span class="day">{{ fmt.rel(a.scheduledAt) }}</span>
+              <span class="hour">{{ apptHour(a.scheduledAt) }}</span>
+              <span class="meridiem">{{ apptMeridiem(a.scheduledAt) }}</span>
+            </div>
+            <div class="appt-info">
+              <div class="who">{{ doc?.name }}</div>
+              <div class="what">{{ a.reason }}</div>
+              <div class="meta">
+                <app-status-tag [status]="a.status" />
+                @if (a.isVirtual) {
+                  <span><app-icon name="video" [size]="12" /> Virtual</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line-soft);">
+        <button class="btn ghost" style="width: 100%; justify-content: center;" (click)="goto('appointments')">
+          See all appointments →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Care team -->
+  <div class="panel" style="margin-top: 18px;">
+    <div class="panel-head">
+      <div class="panel-title">Your <em>care team</em></div>
+      <button class="btn ghost" (click)="goto('find-doctor')">Find a specialist →</button>
+    </div>
+    <div class="doc-grid">
+      @for (d of careTeam(); track d.id) {
+        <div class="doc">
+          <div class="doc-head">
+            <div class="doc-photo">{{ d.initials }}</div>
+            <div>
+              <div class="doc-name">{{ d.name }}</div>
+              <div class="doc-spec">{{ d.specialization }}</div>
+            </div>
+          </div>
+          <div class="doc-bio">Last visit · Apr 22 · BP review</div>
+          <div class="doc-meta">
+            <span>★ {{ d.rating }} <span style="color: var(--muted);">({{ d.reviews }})</span></span>
+            <button class="btn ghost" style="padding: 4px 10px; font-size: 12px;" (click)="openBook(d)">Book →</button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

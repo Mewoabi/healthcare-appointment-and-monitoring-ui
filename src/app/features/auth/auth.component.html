@@ -1,0 +1,63 @@
+<div class="auth">
+  <div class="auth-art">
+    <div class="blob" aria-hidden="true"></div>
+    <div class="brand" style="position: relative;">
+      <span class="brand-mark" style="background: var(--bg); color: var(--ink);">P</span>
+      <span class="brand-name" style="color: var(--bg);">Polaris<em>·Health</em></span>
+    </div>
+    <div style="position: relative;">
+      <h2>Care that<br/><em>listens</em> before<br/>it acts.</h2>
+      <p style="color: rgba(244,241,234,.65); margin-top: 18px; max-width: 44ch; line-height: 1.6;">
+        A unified workspace for patients, clinicians, and operations teams. Appointments, monitoring,
+        and longitudinal vitals — held together by clear, considered design.
+      </p>
+    </div>
+    <div style="position: relative; display: flex; gap: 32px; font-size: 12px; color: rgba(244,241,234,.55);">
+      <div>
+        <div class="mono" style="font-size: 26px; color: var(--bg); letter-spacing: -0.02em;">1,248</div>
+        <div style="margin-top: 4px; letter-spacing: .1em; text-transform: uppercase;">Patients monitored</div>
+      </div>
+      <div>
+        <div class="mono" style="font-size: 26px; color: var(--bg); letter-spacing: -0.02em;">142</div>
+        <div style="margin-top: 4px; letter-spacing: .1em; text-transform: uppercase;">Verified clinicians</div>
+      </div>
+      <div>
+        <div class="mono" style="font-size: 26px; color: var(--bg); letter-spacing: -0.02em;">99.7%</div>
+        <div style="margin-top: 4px; letter-spacing: .1em; text-transform: uppercase;">Uptime · Q1 26</div>
+      </div>
+    </div>
+  </div>
+  <div class="auth-form">
+    <div class="eyebrow">Sign in</div>
+    <h1 style="font-family: 'Fraunces', serif; font-size: 48px; line-height: 1.05; letter-spacing: -0.025em; font-weight: 400; margin-top: 12px; margin-bottom: 0;">
+      Welcome <em style="font-style: italic; color: var(--sage-deep);">back.</em>
+    </h1>
+    <p style="color: var(--muted); margin-top: 12px; font-size: 14px;">Continue to your Polaris Health workspace.</p>
+
+    <div style="margin-top: 32px;">
+      <label class="label" for="email">Email</label>
+      <input id="email" class="input" type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" style="margin-bottom: 14px;" aria-label="Email address" />
+      <label class="label" for="password">Password</label>
+      <input id="password" class="input" type="password" [ngModel]="password()" (ngModelChange)="password.set($event)" style="margin-bottom: 14px;" aria-label="Password" />
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <label class="row gap-sm" style="font-size: 13px; color: var(--muted);">
+          <input type="checkbox" checked style="accent-color: var(--ink);" aria-label="Keep me signed in" /> Keep me signed in
+        </label>
+        <a href="#" style="font-size: 13px; color: var(--sage-deep);">Forgot password?</a>
+      </div>
+      <button class="btn primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 14px;" (click)="login()">
+        Sign in to Polaris Health →
+      </button>
+      <div style="margin-top: 18px; padding: 14px; background: var(--sage-tint); border: 1px solid var(--sage-soft); border-radius: 10px; font-size: 12px; color: var(--sage-deep); display: flex; gap: 10px;">
+        <app-icon name="shield" [size]="14" />
+        <div>
+          <strong>Two-factor authentication</strong> is enabled on this account. You'll be prompted for a code from your authenticator app.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: auto; padding-top: 32px; font-size: 12px; color: var(--muted);">
+      New to Polaris Health? <a href="#" style="color: var(--ink);">Create an account</a> · By signing in you agree to our HIPAA &amp; GDPR data terms.
+    </div>
+  </div>
+</div>

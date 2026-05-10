@@ -1,0 +1,62 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Admin · Configuration</div>
+      <h1 class="page-title">System <em>settings</em></h1>
+      <p class="page-sub">Configure global thresholds, notification policies, and integration credentials.</p>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-title" style="margin-bottom: 16px;">Vital alert thresholds</div>
+      <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">Boundaries for NORMAL / WARNING / CRITICAL classification. Changes apply to new readings only.</p>
+      <table class="admin-table">
+        <thead><tr><th>Vital</th><th>Normal</th><th>Warning</th><th>Critical</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Systolic BP</strong></td><td class="mono">90–139</td><td class="mono">80–89, 140–179</td><td class="mono">&lt;80, ≥180</td></tr>
+          <tr><td><strong>Diastolic BP</strong></td><td class="mono">60–89</td><td class="mono">50–59, 90–99</td><td class="mono">&lt;50, ≥100</td></tr>
+          <tr><td><strong>Heart rate</strong></td><td class="mono">60–100</td><td class="mono">50–59, 101–120</td><td class="mono">&lt;50, &gt;120</td></tr>
+          <tr><td><strong>SpO₂</strong></td><td class="mono">95–100</td><td class="mono">90–94</td><td class="mono">&lt;90</td></tr>
+          <tr><td><strong>Temperature</strong></td><td class="mono">36.1–37.2</td><td class="mono">35.5–36.0, 37.3–38.0</td><td class="mono">&lt;35.5, &gt;38.0</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <div class="panel-title" style="margin-bottom: 16px;">Notifications &amp; retries</div>
+      @for (row of [
+        ['Max retry attempts', '3', true],
+        ['Retry backoff', 'exponential — 1m, 5m, 30m', false],
+        ['Reminder lead time (email)', '24 hours', false],
+        ['Reminder lead time (SMS)', '1 hour', false],
+        ['JWT access token TTL', '15 minutes', true],
+        ['Refresh token TTL', '7 days', true],
+        ['Account lockout', '5 failures, 15 min lock', true],
+        ['Password BCrypt cost', '12', true]
+      ]; track row[0]) {
+        <div style="padding: 12px 0; border-top: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: var(--muted); font-size: 13px;">{{ row[0] }}</span>
+          <span [style.font-family]="row[2] ? 'Geist Mono, monospace' : undefined" style="font-size: 13px;">{{ row[1] }}</span>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="panel" style="margin-top: 18px;">
+    <div class="panel-title" style="margin-bottom: 16px;">Integrations</div>
+    <div class="grid-3" style="gap: 14px;">
+      @for (card of [
+        {name: 'SendGrid', desc: 'Transactional email · 12,402 sent this month', status: 'ACTIVE'},
+        {name: 'Twilio', desc: 'SMS notifications · 1,108 sent · 99.8% delivery', status: 'ACTIVE'},
+        {name: 'HL7 FHIR Bridge', desc: 'Hospital information system interoperability', status: 'INACTIVE'}
+      ]; track card.name) {
+        <div style="padding: 16px; border: 1px solid var(--line-soft); border-radius: 10px;">
+          <div class="row between">
+            <div style="font-weight: 500;">{{ card.name }}</div>
+            <app-status-tag [status]="card.status" />
+          </div>
+          <div style="color: var(--muted); font-size: 12px; margin-top: 6px;">{{ card.desc }}</div>
+          <button class="btn" style="margin-top: 10px; padding: 5px 10px; font-size: 12px;">{{ card.status === 'ACTIVE' ? 'Configure' : 'Connect' }}</button>
+        </div>
+      }
+    </div>
+  </div>
+</div>

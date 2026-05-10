@@ -1,0 +1,77 @@
+<!-- Floating toggle button (always visible) -->
+<button
+  class="twk-toggle-btn"
+  (click)="open.update(v => !v)"
+  [attr.aria-expanded]="open()"
+  aria-label="Open dev tweaks panel"
+  title="Dev tweaks"
+>
+  <app-icon name="settings" [size]="16" />
+</button>
+
+<!-- Panel -->
+@if (open()) {
+  <div class="twk-panel" role="dialog" aria-label="Dev tweaks panel">
+    <!-- Header -->
+    <div class="twk-hd">
+      <span class="twk-title">Dev tweaks</span>
+      <button class="twk-close" (click)="open.set(false)" aria-label="Close tweaks panel">✕</button>
+    </div>
+
+    <div class="twk-body">
+      <!-- Role section -->
+      <div class="twk-section">Role</div>
+      <div class="twk-row">
+        <div class="twk-label">View as</div>
+        <div class="twk-seg" role="group" aria-label="Select role">
+          @for (pair of roles; track pair[0]) {
+            <button
+              class="twk-seg-btn"
+              [class.active]="state.role() === pair[0]"
+              (click)="setRole(pair[0])"
+              [attr.aria-pressed]="state.role() === pair[0]"
+            >{{ pair[1] }}</button>
+          }
+        </div>
+      </div>
+
+      <!-- Page section -->
+      <div class="twk-section">Page</div>
+      <div class="twk-row">
+        <div class="twk-label">Current page</div>
+        <select
+          class="twk-select"
+          [value]="currentPage()"
+          (change)="setPage($any($event.target).value)"
+          aria-label="Navigate to page"
+        >
+          @for (p of pages(); track p.id) {
+            <option [value]="p.id">{{ p.label }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Palette section -->
+      <div class="twk-section">Accent palette</div>
+      <div class="twk-row">
+        <div class="twk-label">Tone</div>
+        <div class="twk-seg" role="group" aria-label="Select palette">
+          @for (pair of palettes; track pair[0]) {
+            <button
+              class="twk-seg-btn"
+              [class.active]="state.palette() === pair[0]"
+              (click)="setPalette(pair[0])"
+              [attr.aria-pressed]="state.palette() === pair[0]"
+            >{{ pair[1] }}</button>
+          }
+        </div>
+      </div>
+
+      <!-- Actions section -->
+      <div class="twk-section">Demo actions</div>
+      <button class="twk-action-btn" (click)="openBooking()">Open booking flow</button>
+      <button class="twk-action-btn" (click)="openVitals()">Open vitals entry</button>
+      <button class="twk-action-btn secondary" (click)="viewLogin()">View login screen</button>
+    </div>
+  </div>
+}

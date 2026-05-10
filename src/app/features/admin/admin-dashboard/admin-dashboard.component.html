@@ -1,0 +1,137 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Admin · Operations</div>
+      <h1 class="page-title">System <em>overview</em></h1>
+      <p class="page-sub">1,248 users on platform. 87 appointments today, 612 this week. 1 doctor pending approval; 3 critical vital alerts in the past 24 hours.</p>
+    </div>
+    <div class="row gap-sm">
+      <button class="btn"><app-icon name="download" /> Export reports</button>
+      <button class="btn primary" (click)="goto('settings')"><app-icon name="settings" /> System settings</button>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat featured">
+      <div class="label">Total users</div>
+      <div class="value">{{ stats()?.totalUsers?.toLocaleString() }}</div>
+      <div style="margin-top: 12px; font-size: 13px; opacity: .85;">{{ stats()?.patients }} patients · {{ stats()?.doctors }} doctors</div>
+      <div style="margin-top: 4px; font-size: 12px; opacity: .6;">+38 this week</div>
+    </div>
+    <div class="stat">
+      <div class="label">Appointments today</div>
+      <div class="value">{{ stats()?.apptToday }}</div>
+      <div class="delta">↗ 12% vs Tue</div>
+    </div>
+    <div class="stat">
+      <div class="label">Critical alerts · 24h</div>
+      <div class="value" style="color: var(--crimson);">{{ stats()?.criticalVitals24h }}</div>
+      <div class="delta down" style="color: var(--crimson);">2 unacknowledged</div>
+    </div>
+    <div class="stat">
+      <div class="label">Failed notifications</div>
+      <div class="value">{{ stats()?.failedNotifs }}</div>
+      <div class="delta">After 3 retries</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Appointments, <em>last 30 days</em></div>
+          <div style="font-size: 13px; color: var(--muted); margin-top: 2px;">Daily volume across the platform</div>
+        </div>
+        <div style="display: flex; gap: 6px;">
+          <button class="btn">7d</button>
+          <button class="btn primary">30d</button>
+          <button class="btn">90d</button>
+        </div>
+      </div>
+      <app-trend-chart [data]="apptSeries" color="#3d4f3d" [height]="240" />
+      <div class="grid-3" style="gap: 14px; margin-top: 18px;">
+        <div style="padding: 14px; border: 1px solid var(--line-soft); border-radius: 10px;">
+          <div class="label">Confirmed</div>
+          <div class="mono" style="font-size: 22px; margin-top: 6px;">78%</div>
+        </div>
+        <div style="padding: 14px; border: 1px solid var(--line-soft); border-radius: 10px;">
+          <div class="label">Completed</div>
+          <div class="mono" style="font-size: 22px; margin-top: 6px;">{{ ((stats()?.apptCompletion ?? 0) * 100).toFixed(0) }}%</div>
+        </div>
+        <div style="padding: 14px; border: 1px solid var(--line-soft); border-radius: 10px;">
+          <div class="label">No-show</div>
+          <div class="mono" style="font-size: 22px; margin-top: 6px;">4%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col" style="gap: 18px;">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Action <em>required</em></div>
+        </div>
+        <!-- Action items -->
+        @for (item of [
+          {icon: 'user', color: '#c08a2c', bg: '#c08a2c22', title: 'Doctor pending approval', desc: 'Dr. Amelia Tao · Obstetrics · MC-52109', cta: 'Review', action: 'approvals'},
+          {icon: 'heart', color: '#a13a2c', bg: '#a13a2c22', title: 'Critical vitals alert', desc: 'Iolanda Brava · BP 92/54 · 1 hr ago', cta: 'Open patient', action: ''},
+          {icon: 'bell', color: '#c2614a', bg: '#c2614a22', title: 'Failed notification', desc: 'SMS to +44 7700 900184 — 3 retries exceeded', cta: 'Investigate', action: ''},
+          {icon: 'shield', color: '#3a463e', bg: '#3a463e22', title: 'Audit anomaly', desc: 'Unusual login pattern · admin@polaris.health', cta: 'View log', action: 'audit'}
+        ]; track item.title) {
+          <div style="padding: 14px 0; border-top: 1px solid var(--line-soft); display: flex; gap: 12px; align-items: center;">
+            <div [style.width.px]="32" [style.height.px]="32" style="border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex: none;"
+                 [style.background]="item.bg" [style.color]="item.color">
+              <app-icon [name]="item.icon" [size]="14" />
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 13.5px; font-weight: 500;">{{ item.title }}</div>
+              <div style="font-size: 12px; color: var(--muted); margin-top: 2px;">{{ item.desc }}</div>
+            </div>
+            <button class="btn" style="padding: 5px 10px; font-size: 12px;" (click)="item.action && goto(item.action)">{{ item.cta }}</button>
+          </div>
+        }
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title">Distribution</div></div>
+        <div style="display: flex; height: 28px; border-radius: 999px; overflow: hidden; border: 1px solid var(--line);">
+          @for (d of distData; track d.label) {
+            <div [style.width]="(d.value / distTotal * 100) + '%'" [style.background]="d.color"></div>
+          }
+        </div>
+        <div style="margin-top: 14px;">
+          @for (d of distData; track d.label; let i = $index) {
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;" [style.border-top]="i ? '1px solid var(--line-soft)' : 'none'">
+              <div class="row gap-sm">
+                <span [style.width.px]="10" [style.height.px]="10" style="border-radius: 2px;" [style.background]="d.color"></span>
+                <span style="font-size: 13px;">{{ d.label }}</span>
+              </div>
+              <div class="mono" style="font-size: 13px;">{{ d.value.toLocaleString() }} <span style="color: var(--muted); font-size: 11px;">· {{ (d.value / distTotal * 100).toFixed(1) }}%</span></div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent activity -->
+  <div class="panel" style="margin-top: 18px;">
+    <div class="panel-head">
+      <div class="panel-title">Recent <em>activity</em></div>
+      <button class="btn ghost" (click)="goto('audit')">Full audit log →</button>
+    </div>
+    <table class="admin-table">
+      <thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Target</th><th>IP</th></tr></thead>
+      <tbody>
+        @for (r of auditRows; track $index) {
+          <tr>
+            <td class="mono" style="color: var(--muted);">{{ r[0] }}</td>
+            <td>{{ r[1] }}</td>
+            <td><span class="tag" style="font-size: 10px;">{{ r[2] }}</span></td>
+            <td>{{ r[3] }}</td>
+            <td class="mono" style="color: var(--muted); font-size: 11px;">{{ r[4] }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

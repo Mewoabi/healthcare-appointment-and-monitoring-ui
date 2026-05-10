@@ -1,0 +1,136 @@
+<div class="modal-backdrop" (click)="close.emit()">
+  <div class="modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" [attr.aria-label]="'Book appointment with ' + doctor().name">
+    <div class="modal-head">
+      <div>
+        <div class="eyebrow">Book appointment</div>
+        <div style="font-family: 'Fraunces', serif; font-size: 28px; margin-top: 4px; letter-spacing: -0.02em;">{{ doctor().name }}</div>
+        <div style="color: var(--muted); font-size: 13px; margin-top: 2px;">{{ doctor().specialization }} · {{ doctor().hospital }}</div>
+      </div>
+      <button class="iconbtn" (click)="close.emit()" aria-label="Close modal">
+        <app-icon name="x" />
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <div class="stepper" role="list">
+        <div [class]="'step' + (step() >= 1 ? ' active' : '')" role="listitem">
+          <span class="num" aria-hidden="true">1</span> Date &amp; time
+        </div>
+        <div [class]="'step' + (step() >= 2 ? ' active' : '')" role="listitem">
+          <span class="num" aria-hidden="true">2</span> Reason
+        </div>
+        <div [class]="'step' + (step() >= 3 ? ' active' : '')" role="listitem">
+          <span class="num" aria-hidden="true">3</span> Confirm
+        </div>
+      </div>
+
+      @if (step() === 1) {
+        <div class="label">Choose a date</div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 22px;">
+          @for (d of dateOptions(); track $index) {
+            <button
+              class="btn ghost"
+              (click)="selectedDate.set($index)"
+              [style.background]="selectedDate() === $index ? 'var(--ink)' : 'var(--surface)'"
+              [style.color]="selectedDate() === $index ? 'var(--bg)' : 'var(--ink)'"
+              [style.border]="'1px solid ' + (selectedDate() === $index ? 'var(--ink)' : 'var(--line)')"
+              style="padding: 10px 6px; flex-direction: column; gap: 2px; border-radius: 8px;"
+              [attr.aria-pressed]="selectedDate() === $index"
+            >
+              <span style="font-size: 10px; letter-spacing: .1em; opacity: .7;">{{ fmtDay(d) }}</span>
+              <span style="font-family: 'Fraunces', serif; font-size: 18px; letter-spacing: -0.02em;">{{ d.getDate() }}</span>
+            </button>
+          }
+        </div>
+        <div class="label">Available time slots — {{ fmtDateLong(dateOptions()[selectedDate()]) }}</div>
+        <div class="slot-grid" role="group" aria-label="Time slots">
+          @for (s of slots; track s) {
+            @if (taken.includes(s)) {
+              <button class="slot taken" disabled [attr.aria-label]="s + ' unavailable'">{{ s }}</button>
+            } @else {
+              <button
+                [class]="'slot' + (selectedSlot() === s ? ' active' : '')"
+                (click)="selectedSlot.set(s)"
+                [attr.aria-pressed]="selectedSlot() === s"
+              >{{ s }}</button>
+            }
+          }
+        </div>
+        <div style="margin-top: 18px; padding: 12px; background: var(--line-soft); border-radius: 8px; display: flex; gap: 12px; align-items: center;">
+          <input type="checkbox" id="vc" [checked]="virtual()" (change)="virtual.set($any($event.target).checked)" style="accent-color: var(--ink);" />
+          <label for="vc" style="font-size: 13px; cursor: pointer;">
+            <strong>Virtual consultation</strong> — meet via secure video instead of in person
+          </label>
+        </div>
+      }
+
+      @if (step() === 2) {
+        <div class="label" for="reason-text">Reason for visit</div>
+        <textarea
+          id="reason-text"
+          class="input"
+          placeholder="Briefly describe your symptoms or the purpose of this visit. Your doctor will see this before the appointment."
+          rows="4"
+          [value]="reason()"
+          (input)="reason.set($any($event.target).value)"
+        ></textarea>
+        <div style="margin-top: 18px;" class="label">Recent vitals to share (optional)</div>
+        <div class="row gap-sm" style="margin-top: 6px; flex-wrap: wrap;">
+          <label class="row gap-sm" style="padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; cursor: pointer;">
+            <input type="checkbox" checked style="accent-color: var(--ink);" /> Last 30 days BP readings
+          </label>
+          <label class="row gap-sm" style="padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; cursor: pointer;">
+            <input type="checkbox" checked style="accent-color: var(--ink);" /> Heart rate trend
+          </label>
+          <label class="row gap-sm" style="padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 13px; cursor: pointer;">
+            <input type="checkbox" style="accent-color: var(--ink);" /> Medication list
+          </label>
+        </div>
+      }
+
+      @if (step() === 3) {
+        <div style="padding: 24px; background: var(--sage-tint); border-radius: 12px; border: 1px solid var(--sage-soft);">
+          <div style="font-family: 'Fraunces', serif; font-size: 22px; color: var(--sage-deep); letter-spacing: -0.015em;">Ready to book</div>
+          <div style="margin-top: 14px; font-size: 14px; color: var(--ink-2);">
+            <div style="padding: 10px 0; border-bottom: 1px solid var(--sage-soft); display: flex; justify-content: space-between;">
+              <span style="color: var(--muted);">Doctor</span><strong>{{ doctor().name }}</strong>
+            </div>
+            <div style="padding: 10px 0; border-bottom: 1px solid var(--sage-soft); display: flex; justify-content: space-between;">
+              <span style="color: var(--muted);">Date &amp; time</span>
+              <strong class="mono">{{ fmtDateLong(dateOptions()[selectedDate()]) }} · {{ selectedSlot() || '14:00' }}</strong>
+            </div>
+            <div style="padding: 10px 0; border-bottom: 1px solid var(--sage-soft); display: flex; justify-content: space-between;">
+              <span style="color: var(--muted);">Format</span>
+              <strong>{{ virtual() ? 'Virtual consultation' : 'In-person · ' + doctor().hospital }}</strong>
+            </div>
+            <div style="padding: 10px 0; border-bottom: 1px solid var(--sage-soft); display: flex; justify-content: space-between;">
+              <span style="color: var(--muted);">Fee</span><strong class="mono">${{ doctor().fee }}.00</strong>
+            </div>
+            <div style="padding: 10px 0; display: flex; justify-content: space-between;">
+              <span style="color: var(--muted);">Status after booking</span><strong>Pending doctor confirmation</strong>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="modal-foot">
+      <button class="btn ghost" (click)="close.emit()">Cancel</button>
+      <div class="row gap-sm">
+        @if (step() > 1) {
+          <button class="btn" (click)="back()">← Back</button>
+        }
+        @if (step() < 3) {
+          <button
+            class="btn primary"
+            [disabled]="!canContinue()"
+            [style.opacity]="canContinue() ? 1 : 0.5"
+            (click)="next()"
+          >Continue →</button>
+        } @else {
+          <button class="btn primary" (click)="submit()">Confirm booking</button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

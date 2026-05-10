@@ -1,0 +1,37 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Admin · Compliance</div>
+      <h1 class="page-title">Audit <em>log</em></h1>
+      <p class="page-sub">Immutable record of every CREATE, UPDATE, DELETE, LOGIN, and LOGOUT against sensitive entities. Required for HIPAA &amp; GDPR compliance.</p>
+    </div>
+    <button class="btn"><app-icon name="download" /> Export CSV</button>
+  </div>
+
+  <div class="row" style="margin-bottom: 14px; gap: 8px;">
+    <input class="input" placeholder="Filter by actor, entity or IP" style="flex: 1;" aria-label="Filter audit log" />
+    <button class="btn">All actions</button>
+    <button class="btn">Last 24 hours</button>
+  </div>
+
+  <div class="panel" style="padding: 8px 24px;">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Time</th><th>Actor</th><th>Action</th><th>Entity</th><th>ID</th><th>IP</th><th>Client</th></tr>
+      </thead>
+      <tbody>
+        @for (r of rows; track r.id) {
+          <tr>
+            <td class="mono" style="color: var(--muted); font-size: 12px;">{{ r.timestamp }}</td>
+            <td>{{ r.actor }}</td>
+            <td><span [class]="'tag ' + (tones[r.action] || '')" style="font-size: 10px;">{{ r.action }}</span></td>
+            <td>{{ r.entity }}</td>
+            <td class="mono" style="font-size: 12px;">{{ r.entityId }}</td>
+            <td class="mono" style="color: var(--muted); font-size: 11px;">{{ r.ip }}</td>
+            <td style="color: var(--muted); font-size: 12px;">{{ r.userAgent }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,121 @@
+<div>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Wednesday · {{ fmt.date(today) }}, 2026</div>
+      <h1 class="page-title">Good morning,<br/><em>Dr. Okonkwo.</em></h1>
+      <p class="page-sub">Eight patients on today's roster. Three completed, one in session, two awaiting your confirmation. Three patient vitals have triggered alerts in the past 7 days.</p>
+    </div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn"><app-icon name="calendar" /> Block time</button>
+      <button class="btn primary"><app-icon name="plus" /> New consult note</button>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat featured">
+      <div class="label">Today's roster</div>
+      <div class="value">8</div>
+      <div style="margin-top: 12px; font-size: 13px; opacity: .85;">{{ completed() }} completed · 1 in session</div>
+      <div style="margin-top: 4px; font-size: 12px; opacity: .6;">Next: Maren Holloway, 14:30</div>
+    </div>
+    <div class="stat">
+      <div class="label">Pending confirmations</div>
+      <div class="value">{{ pendingCount() }}</div>
+      <div class="delta down">↗ 1 since yesterday</div>
+    </div>
+    <div class="stat">
+      <div class="label">Flagged vitals · 7d</div>
+      <div class="value">{{ flagged() }}</div>
+      <div class="delta down" style="color: var(--crimson);">1 critical</div>
+    </div>
+    <div class="stat">
+      <div class="label">Avg rating</div>
+      <div class="value">4.9</div>
+      <div class="delta">312 reviews</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Today schedule -->
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Today's <em>schedule</em></div>
+          <div style="color: var(--muted); font-size: 13px; margin-top: 2px;">Wednesday, May 6 · 8 appointments · Bay 3</div>
+        </div>
+        <button class="btn ghost" (click)="goto('calendar')">Week view →</button>
+      </div>
+      <div class="today-list">
+        @for (s of appointmentStore.scheduleToday(); track s.time) {
+          <div class="today-row">
+            <div class="today-time">{{ s.time }}</div>
+            <div>
+              <div style="font-size: 14.5px; font-weight: 500;">{{ s.patient }}</div>
+              <div style="color: var(--muted); font-size: 12.5px; margin-top: 2px;">{{ s.reason }}{{ s.virtual ? ' · Virtual' : '' }}</div>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <app-status-tag [status]="s.status" />
+              @if (s.status === 'PENDING') {
+                <button class="btn primary" style="padding: 5px 10px; font-size: 12px;"><app-icon name="check" [size]="12" /> Confirm</button>
+                <button class="btn danger" style="padding: 5px 10px; font-size: 12px;">Decline</button>
+              }
+              @if (s.status === 'IN_PROGRESS') {
+                <button class="btn primary" style="padding: 5px 10px; font-size: 12px;">Open chart</button>
+              }
+              @if (s.status === 'CONFIRMED' && s.virtual) {
+                <button class="btn" style="padding: 5px 10px; font-size: 12px;"><app-icon name="video" [size]="12" /> Join</button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="col" style="gap: 18px;">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Patients of <em>concern</em></div>
+          <span class="tag crimson"><span class="dot"></span>3 flagged</span>
+        </div>
+        @for (p of flaggedPatients(); track p.id) {
+          <div style="padding: 12px 0; border-top: 1px solid var(--line-soft); display: flex; gap: 12px; align-items: center;">
+            <div class="doc-photo" style="width: 36px; height: 36px; font-size: 13px;">{{ p.initials }}</div>
+            <div style="flex: 1;">
+              <div style="font-size: 14px; font-weight: 500;">{{ p.name }}</div>
+              <div style="color: var(--muted); font-size: 12px;">{{ p.age }} · {{ p.reason }}</div>
+            </div>
+            <app-status-tag [status]="p.flag!" />
+          </div>
+        }
+        <button class="btn ghost" style="width: 100%; margin-top: 14px; justify-content: center;" (click)="goto('patients')">All patients →</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">This week</div>
+        </div>
+        <div class="row" style="gap: 24px;">
+          <div>
+            <div style="font-family: 'Fraunces', serif; font-size: 36px; letter-spacing: -0.02em;">34</div>
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase;">Consults</div>
+          </div>
+          <div>
+            <div style="font-family: 'Fraunces', serif; font-size: 36px; letter-spacing: -0.02em;">6.1k</div>
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase;">Earnings</div>
+          </div>
+          <div>
+            <div style="font-family: 'Fraunces', serif; font-size: 36px; letter-spacing: -0.02em;">96%</div>
+            <div style="font-size: 12px; color: var(--muted); letter-spacing: .08em; text-transform: uppercase;">Show rate</div>
+          </div>
+        </div>
+        <div style="margin-top: 18px;">
+          <app-sparkline [data]="weekSpark" color="#3d4f3d" [fill]="true" [width]="400" [height]="48" />
+          <div class="row between" style="font-size: 11px; color: var(--muted); margin-top: 4px;">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
