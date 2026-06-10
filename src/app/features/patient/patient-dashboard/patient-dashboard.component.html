@@ -3,7 +3,11 @@
     <div>
       <div class="eyebrow">Wednesday · {{ fmt.date(today) }}, 2026</div>
       <h1 class="page-title">Good morning,<br/><em>Maren.</em></h1>
-      <p class="page-sub">Your blood pressure trend has settled into the warning band. One reading was elevated last week — Dr. Okonkwo will review at today's visit.</p>
+      <div class="page-chips">
+        <span class="page-chip warn"><span class="chip-dot"></span>BP · warning trend</span>
+        <span class="page-chip warn"><span class="chip-dot"></span>1 elevated reading</span>
+        <span class="page-chip ok"><span class="chip-dot"></span>Review visit today</span>
+      </div>
     </div>
     <div style="display: flex; gap: 8px;">
       <button class="btn" (click)="goto('vitals')"><app-icon name="activity" /> Log vitals</button>

@@ -12,12 +12,12 @@
       <div class="panel-title">Pending — <span class="tag amber"><span class="dot"></span>1</span></div>
     </div>
 
-    <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 24px; padding: 18px; border: 1px solid var(--line-soft); border-radius: 12px;">
+    <div class="approval-card">
       <div class="doc-photo" style="width: 80px; height: 80px; font-size: 28px;">AT</div>
       <div>
         <div style="font-family: 'Fraunces', serif; font-size: 22px; letter-spacing: -0.015em;">Dr. Amelia Tao</div>
         <div style="color: var(--muted); font-size: 13px; margin-top: 2px;">atao@polaris.health · Submitted May 2, 2026</div>
-        <div style="margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; max-width: 720px;">
+        <div class="approval-credentials">
           @for (item of [
             ['Specialization', 'Obstetrics', false],
             ['Sub-specialty', 'Maternal-Fetal Medicine', false],
@@ -36,7 +36,7 @@
           "Pregnancy care from first trimester through postpartum. High-risk pregnancy management with focus on hypertensive disorders and gestational diabetes."
         </div>
       </div>
-      <div class="col" style="align-items: flex-end; gap: 8px;">
+      <div class="col approval-actions" style="align-items: flex-end; gap: 8px;">
         <button class="btn primary" style="width: 140px; justify-content: center;"><app-icon name="check" /> Approve</button>
         <button class="btn danger" style="width: 140px; justify-content: center;"><app-icon name="x" /> Reject</button>
         <button class="btn ghost" style="width: 140px; justify-content: center;">Request info</button>
@@ -47,18 +47,20 @@
     </div>
   </div>
 
-  <div class="panel" style="margin-top: 18px;">
-    <div class="panel-head">
+  <div style="margin-top: 18px;">
+    <div class="panel-head" style="padding: 16px 20px 0;">
       <div class="panel-title">Recently approved</div>
     </div>
-    <table class="admin-table">
-      <thead><tr><th>Doctor</th><th>Specialization</th><th>Approved</th><th>By</th></tr></thead>
-      <tbody>
-        <tr><td><strong>Dr. Pia Sundqvist</strong></td><td>Dermatology</td><td class="mono" style="color: var(--muted);">Mar 18, 2026</td><td>admin&#64;polaris.health</td></tr>
-        <tr><td><strong>Dr. Henrik Vasquez</strong></td><td>Endocrinology</td><td class="mono" style="color: var(--muted);">Feb 8, 2026</td><td>admin&#64;polaris.health</td></tr>
-        <tr><td><strong>Dr. Lin Marchetti</strong></td><td>General Practice</td><td class="mono" style="color: var(--muted);">Jan 22, 2026</td><td>admin&#64;polaris.health</td></tr>
-        <tr><td><strong>Dr. Reuben Halevy</strong></td><td>Pulmonology</td><td class="mono" style="color: var(--muted);">Jan 14, 2026</td><td>admin&#64;polaris.health</td></tr>
-      </tbody>
-    </table>
+    <div class="table-scroll" style="border-radius: 0 0 var(--radius) var(--radius); border-top: none;">
+      <table class="admin-table">
+        <thead><tr><th>Doctor</th><th>Specialization</th><th>Approved</th><th>By</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Dr. Pia Sundqvist</strong></td><td>Dermatology</td><td class="mono" style="color: var(--muted);">Mar 18, 2026</td><td>admin&#64;polaris.health</td></tr>
+          <tr><td><strong>Dr. Henrik Vasquez</strong></td><td>Endocrinology</td><td class="mono" style="color: var(--muted);">Feb 8, 2026</td><td>admin&#64;polaris.health</td></tr>
+          <tr><td><strong>Dr. Lin Marchetti</strong></td><td>General Practice</td><td class="mono" style="color: var(--muted);">Jan 22, 2026</td><td>admin&#64;polaris.health</td></tr>
+          <tr><td><strong>Dr. Reuben Halevy</strong></td><td>Pulmonology</td><td class="mono" style="color: var(--muted);">Jan 14, 2026</td><td>admin&#64;polaris.health</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

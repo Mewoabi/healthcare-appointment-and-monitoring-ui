@@ -3,7 +3,12 @@
     <div>
       <div class="eyebrow">Wednesday · {{ fmt.date(today) }}, 2026</div>
       <h1 class="page-title">Good morning,<br/><em>Dr. Okonkwo.</em></h1>
-      <p class="page-sub">Eight patients on today's roster. Three completed, one in session, two awaiting your confirmation. Three patient vitals have triggered alerts in the past 7 days.</p>
+      <div class="page-chips">
+        <span class="page-chip"><span class="chip-dot"></span>8 patients today</span>
+        <span class="page-chip ok"><span class="chip-dot"></span>{{ completed() }} completed · 1 in session</span>
+        <span class="page-chip warn"><span class="chip-dot"></span>{{ pendingCount() }} awaiting confirmation</span>
+        <span class="page-chip danger"><span class="chip-dot"></span>{{ flagged() }} flagged vitals</span>
+      </div>
     </div>
     <div style="display: flex; gap: 8px;">
       <button class="btn"><app-icon name="calendar" /> Block time</button>

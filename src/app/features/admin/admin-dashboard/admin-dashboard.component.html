@@ -3,7 +3,12 @@
     <div>
       <div class="eyebrow">Admin · Operations</div>
       <h1 class="page-title">System <em>overview</em></h1>
-      <p class="page-sub">1,248 users on platform. 87 appointments today, 612 this week. 1 doctor pending approval; 3 critical vital alerts in the past 24 hours.</p>
+      <div class="page-chips">
+        <span class="page-chip"><span class="chip-dot"></span>1,248 users</span>
+        <span class="page-chip"><span class="chip-dot"></span>87 appointments today</span>
+        <span class="page-chip warn"><span class="chip-dot"></span>1 pending approval</span>
+        <span class="page-chip danger"><span class="chip-dot"></span>3 critical alerts</span>
+      </div>
     </div>
     <div class="row gap-sm">
       <button class="btn"><app-icon name="download" /> Export reports</button>

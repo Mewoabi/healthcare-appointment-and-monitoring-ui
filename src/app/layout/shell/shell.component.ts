@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 import { AppStateService } from '../../core/services/app-state.service';
 import { IconComponent } from '../../shared/icon/icon.component';
 import { Role } from '../../core/models';
@@ -30,6 +32,14 @@ export class ShellComponent implements OnInit {
   readonly notificationStore = inject(NotificationStore);
   readonly doctorStore = inject(DoctorStore);
   readonly router = inject(Router);
+
+  menuOpen = signal(false);
+
+  constructor() {
+    this.router.events
+      .pipe(filter((e) => e instanceof NavigationEnd), takeUntilDestroyed())
+      .subscribe(() => this.menuOpen.set(false));
+  }
 
   isSection = isSection;
 
@@ -106,6 +116,14 @@ export class ShellComponent implements OnInit {
   signOut(): void {
     this.authStore.logout();
     this.state.authed.set(false);
+  }
+
+  toggleMenu(): void {
+    this.menuOpen.update((v) => !v);
+  }
+
+  closeMenu(): void {
+    this.menuOpen.set(false);
   }
 
   toggleNotif(e: Event): void {
