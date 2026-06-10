@@ -88,6 +88,12 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
         @case ('menu') {
           <path d="M3 5h14M3 10h14M3 15h14"/>
         }
+        @case ('moon') {
+          <path d="M17 12A7 7 0 1 1 8 3a5.5 5.5 0 0 0 9 9z"/>
+        }
+        @case ('sun') {
+          <circle cx="10" cy="10" r="4"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/>
+        }
       }
     </svg>
   `,

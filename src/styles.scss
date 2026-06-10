@@ -1670,3 +1670,49 @@ textarea.input {
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
 }
+
+// ─── Dark mode overrides (hardcoded non-variable colours) ────
+html.dark {
+  color-scheme: dark;
+
+  .stat.featured {
+    background: #1c3560;
+    border-color: #254480;
+    color: #e4ecf8;
+
+    .label { color: rgba(228, 236, 248, 0.5); }
+    .value { color: #e4ecf8; }
+    .delta { color: #7ec8a0; }
+  }
+
+  .vital {
+    background: rgba(255, 255, 255, 0.04);
+
+    &.warn {
+      background: #241a06;
+      border-color: #3d2f10;
+      .val { color: #e0a030; }
+    }
+
+    &.crit {
+      background: #2a0f0f;
+      border-color: #4a1515;
+    }
+  }
+
+  .chart-wrap {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
+  }
+
+  .admin-table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .sidebar {
+    background: var(--bg);
+  }
+
+  input, textarea, select {
+    color-scheme: dark;
+  }
+}

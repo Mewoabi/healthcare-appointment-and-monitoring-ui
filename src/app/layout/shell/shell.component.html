@@ -33,8 +33,8 @@
         <app-notif-panel (close)="closeNotif()" />
       }
     </div>
-    <button class="iconbtn topbar-settings" aria-label="Settings">
-      <app-icon name="settings" [size]="15" />
+    <button class="iconbtn topbar-theme" (click)="state.toggleDark()" [attr.aria-label]="state.darkMode() ? 'Switch to light mode' : 'Switch to dark mode'" [attr.aria-pressed]="state.darkMode()">
+      <app-icon [name]="state.darkMode() ? 'sun' : 'moon'" [size]="15" />
     </button>
     <div class="topbar-user">
       <div class="avatar">{{ identity().initials }}</div>

@@ -1,5 +1,12 @@
 export const TODAY = new Date(2026, 4, 6); // May 6, 2026
 
+export function timeGreeting(): string {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return 'Good morning';
+  if (h >= 12 && h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
 export function addDays(base: Date, d: number, h = 9, m = 0): Date {
   const x = new Date(base);
   x.setDate(x.getDate() + d);
