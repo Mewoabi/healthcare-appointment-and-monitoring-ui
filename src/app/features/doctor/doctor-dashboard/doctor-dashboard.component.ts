@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@a
 import { Router } from '@angular/router';
 import { AppointmentStore } from '../../../core/stores/appointment.store';
 import { DoctorStore } from '../../../core/stores/doctor.store';
-import { fmt, TODAY } from '../../../core/util/format';
+import { fmt, timeGreeting, TODAY } from '../../../core/util/format';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { SparklineComponent } from '../../../shared/sparkline/sparkline.component';
 import { StatusTagComponent } from '../../../shared/status-tag/status-tag.component';
@@ -20,6 +20,7 @@ export class DoctorDashboardComponent implements OnInit {
 
   fmt = fmt;
   today = TODAY;
+  greeting = timeGreeting();
 
   ngOnInit(): void {
     this.appointmentStore.loadScheduleToday(1);

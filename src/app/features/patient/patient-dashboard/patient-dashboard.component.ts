@@ -5,7 +5,7 @@ import { AppointmentStore } from '../../../core/stores/appointment.store';
 import { DoctorStore } from '../../../core/stores/doctor.store';
 import { VitalStore } from '../../../core/stores/vital.store';
 import { PatientStore } from '../../../core/stores/patient.store';
-import { fmt, TODAY } from '../../../core/util/format';
+import { fmt, timeGreeting, TODAY } from '../../../core/util/format';
 import { IconComponent } from '../../../shared/icon/icon.component';
 import { SparklineComponent } from '../../../shared/sparkline/sparkline.component';
 import { StatusTagComponent } from '../../../shared/status-tag/status-tag.component';
@@ -26,6 +26,7 @@ export class PatientDashboardComponent implements OnInit {
 
   today = TODAY;
   fmt = fmt;
+  greeting = timeGreeting();
 
   ngOnInit(): void {
     this.appointmentStore.loadAll();
