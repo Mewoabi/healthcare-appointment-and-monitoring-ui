@@ -26,7 +26,7 @@
 
       @if (step() === 1) {
         <div class="label">Choose a date</div>
-        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 22px;">
+        <div class="date-picker-grid" style="gap: 6px; margin-bottom: 22px;">
           @for (d of dateOptions(); track $index) {
             <button
               class="btn ghost"

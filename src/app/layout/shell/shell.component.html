@@ -1,23 +1,28 @@
 <!-- Topbar -->
 <header class="topbar">
-  <div class="row" style="gap: 36px">
+  <div class="topbar-left">
+    <button class="iconbtn menu-btn" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen()" aria-controls="sidebar" aria-label="Open navigation">
+      <app-icon name="menu" [size]="16" />
+    </button>
     <div class="brand">
-      <span class="brand-mark">P</span>
-      <span class="brand-name">Polaris<em>·Health</em></span>
+      <div class="brand-lockup">
+        <span class="brand-mark">P</span>
+        <span class="brand-name">olaris<em>·Health</em></span>
+      </div>
       <span class="brand-tag">{{ roleTag() }}</span>
     </div>
   </div>
+  <div class="topbar-search">
+    <app-icon name="search" [size]="14" color="var(--muted)" />
+    <input
+      placeholder="Search…"
+      aria-label="Search"
+      class="topbar-search-input"
+    />
+    <span class="mono topbar-search-hint">⌘K</span>
+  </div>
   <div class="topright">
-    <div style="position: relative; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; display: flex; align-items: center; gap: 8px; background: var(--surface); min-width: 280px;">
-      <app-icon name="search" [size]="14" color="var(--muted)" />
-      <input
-        placeholder="Search…"
-        aria-label="Search"
-        style="border: none; background: transparent; outline: none; flex: 1; font-family: inherit; font-size: 13px; color: var(--ink);"
-      />
-      <span class="mono" style="font-size: 10px; color: var(--muted); padding: 1px 5px; border: 1px solid var(--line); border-radius: 4px;">⌘K</span>
-    </div>
-    <div style="position: relative;">
+    <div class="notif-wrap">
       <button class="iconbtn" (click)="toggleNotif($event)" aria-label="Notifications" [attr.aria-expanded]="state.showNotif()">
         <app-icon name="bell" [size]="15" />
         @if (unreadCount() > 0) {
@@ -28,14 +33,14 @@
         <app-notif-panel (close)="closeNotif()" />
       }
     </div>
-    <button class="iconbtn" aria-label="Settings">
+    <button class="iconbtn topbar-settings" aria-label="Settings">
       <app-icon name="settings" [size]="15" />
     </button>
-    <div class="row gap-sm" style="padding-left: 6px; border-left: 1px solid var(--line);">
+    <div class="topbar-user">
       <div class="avatar">{{ identity().initials }}</div>
-      <div style="font-size: 13px; line-height: 1.2;">
-        <div style="font-weight: 500;">{{ identity().name }}</div>
-        <div style="color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em;">{{ state.role() }}</div>
+      <div class="user-name-label">
+        <div class="user-name">{{ identity().name }}</div>
+        <div class="user-role">{{ state.role() }}</div>
       </div>
     </div>
   </div>
@@ -43,7 +48,7 @@
 
 <!-- Layout -->
 <div class="layout">
-  <aside class="sidebar">
+  <aside class="sidebar" [class.open]="menuOpen()" id="sidebar" role="navigation" aria-label="Main navigation">
     <!-- Scrollable nav region -->
     <div class="sidebar-nav">
       @for (entry of nav(); track $index) {
@@ -91,6 +96,10 @@
   <main class="main">
     <router-outlet />
   </main>
+
+  @if (menuOpen()) {
+    <div class="sidebar-overlay" (click)="closeMenu()" aria-hidden="true"></div>
+  }
 </div>
 
 <!-- Modals (position: fixed — out of flow, don't affect flex layout) -->

@@ -85,6 +85,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
         @case ('logout') {
           <path d="M8 4H4v12h4"/><path d="M11 10h7M15 7l3 3-3 3"/>
         }
+        @case ('menu') {
+          <path d="M3 5h14M3 10h14M3 15h14"/>
+        }
       }
     </svg>
   `,

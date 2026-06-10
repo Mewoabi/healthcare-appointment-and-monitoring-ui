@@ -4,3 +4,114 @@
   height: 100vh;
   overflow: hidden;
 }
+
+// ─── Topbar structure ────────────────────────────────────
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.topbar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  min-width: 280px;
+  flex: 0 1 360px;
+}
+
+.topbar-search-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  flex: 1;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  min-width: 0;
+}
+
+.topbar-search-hint {
+  font-size: 10px;
+  color: var(--muted);
+  padding: 1px 5px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 6px;
+  border-left: 1px solid var(--line);
+}
+
+.user-name-label {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-weight: 500;
+}
+
+.user-role {
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.notif-wrap {
+  position: relative;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+// ─── Hidden on desktop ───────────────────────────────────
+.menu-btn {
+  display: none;
+}
+
+// ─── Tablet: hide search, shrink spacing ─────────────────
+@media (max-width: 768px) {
+  .menu-btn {
+    display: inline-flex;
+  }
+
+  .topbar-search {
+    display: none;
+  }
+
+  .user-name-label {
+    display: none;
+  }
+
+  .topbar-user {
+    border-left: none;
+    padding-left: 0;
+  }
+}
+
+// ─── Mobile: tighten further ─────────────────────────────
+@media (max-width: 480px) {
+  .brand-tag {
+    display: none;
+  }
+
+  .topbar-settings {
+    display: none;
+  }
+}
